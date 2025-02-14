@@ -28,3 +28,19 @@ def criar_empresa(request:EmpresaDTO, db: Session = Depends(get_db)) -> JSONResp
         'id': db_empresa.id,
         'result': dto
     }, status_code=201)
+
+@empresa.get("")
+def pegar_empresas(db: Session = Depends(get_db), id:int=None, cnpj:str=None, nome:str=None) -> JSONResponse:
+    query=[]
+    if(id!=None):
+        query = db.query(Empresa).filter_by(id=id).all()
+    elif(cnpj!=None):
+        query = db.query(Empresa).filter_by(cnpj=cnpj).all()
+    elif(nome!=None):
+        query = db.query(Empresa).filter_by(nome=nome).all()     
+
+    query = [EmpresaDTO.from_orm(item).model_dump() for item in query]
+    return JSONResponse(content={
+        'detail': f'({len(query)}) item(s) foram encontrado(s).',
+        'result':query
+    }, status_code=200)
