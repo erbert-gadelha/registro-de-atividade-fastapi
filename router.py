@@ -13,9 +13,14 @@ empresa = APIRouter(prefix="/empresa")
 def criar_empresa(request:EmpresaDTO, db: Session = Depends(get_db)) -> JSONResponse:
     db_empresa = Empresa(dto=request)
 
-    db.add(db_empresa)
-    db.commit()
-    db.refresh(db_empresa)
+    try:
+        db.add(db_empresa)
+        db.commit()
+        db.refresh(db_empresa)
+    except Exception as e:
+        return JSONResponse(content={
+            'detail': 'CNPJ deve ser único.'
+        }, status_code=400)
 
     dto = EmpresaDTO.from_orm(db_empresa).model_dump()
     return JSONResponse(content={
