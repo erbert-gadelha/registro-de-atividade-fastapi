@@ -60,3 +60,19 @@ def excluir_empresa(request:EmpresaDTO, db: Session = Depends(get_db)) -> JSONRe
     except Exception as e:
         return JSONResponse(content={'detail': 'Erro do sistema.'}, status_code=400)
     return JSONResponse(content={'detail': 'Excluido com sucesso.'}, status_code=200)
+
+@empresa.patch("/")
+def editar_empresa(request:EmpresaDTO, db: Session = Depends(get_db)) -> JSONResponse:
+    empresa = db.query(Empresa).filter_by(cnpj=request.cnpj).first()
+    if empresa is None:
+        return JSONResponse(content={'detail': f'Não foi possível localizar o cnpj ({request.cnpj}).'}, status_code=400)    
+    try:
+        empresa.nome = request.nome
+        empresa.endereco = request.endereco
+        empresa.telefone = request.telefone
+        db.commit()
+        db.refresh(empresa)
+    except Exception as e:
+        return JSONResponse(content={'detail': 'Erro do sistema.'}, status_code=400)
+
+    return JSONResponse(content={'detail': 'Editado com sucesso.', 'content': EmpresaDTO.from_orm(empresa).model_dump() }, status_code=200)
