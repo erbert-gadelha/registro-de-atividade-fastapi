@@ -44,3 +44,46 @@ def pegar_empresas(db: Session = Depends(get_db), id:int=None, cnpj:str=None, no
         'detail': f'({len(query)}) item(s) foram encontrado(s).',
         'result':query
     }, status_code=200)
+
+
+@empresa.delete("/{id}")
+def excluir_empresa_por_id(id:int, db: Session = Depends(get_db)) -> JSONResponse:
+    empresa = db.query(Empresa).filter_by(id=id).first()
+
+    if empresa is None:
+        return JSONResponse(content={'detail': f'Não foi possível localizar o id ({id}).'}, status_code=400)
+
+    try:
+        db.delete(empresa)
+        db.commit()
+    except Exception as e:
+        print(e)
+        return JSONResponse(content={
+            'detail': 'Erro interno no banco.'
+        }, status_code=400)
+
+    return JSONResponse(content={
+        'detail': 'Excluido com sucesso.',
+    }, status_code=200)
+
+
+@empresa.delete("/")
+def excluir_empresa(request:EmpresaDTO, db: Session = Depends(get_db)) -> JSONResponse:
+    db_empresa = Empresa(dto=request)
+
+    try:
+        temp = db.query(Empresa).filter_by(id=id).first()
+        temp = db.query(entity=db_empresa, ident=cnpj)
+        print (temp)
+        db.delete(temp)
+        db.commit()
+        #db.refresh(db_empresa)
+    except Exception as e:
+        print(e)
+        return JSONResponse(content={
+            'detail': 'CNPJ deve ser único.'
+        }, status_code=400)
+
+    return JSONResponse(content={
+        'detail': 'Excluido com sucesso.',
+    }, status_code=200)

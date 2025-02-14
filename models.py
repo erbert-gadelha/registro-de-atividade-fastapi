@@ -1,6 +1,7 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy import Column, Integer, String
 from database import Base
+import schemas
 
 class Empresa(Base):
     __tablename__ = "empresa_tb"
@@ -9,6 +10,13 @@ class Empresa(Base):
     cnpj = Column(String, unique=True)
     endereco = Column(String)
     telefone = Column(String)
+
+    def __init__(self, dto:schemas.EmpresaDTO):
+        self.nome = dto.nome
+        self.cnpj = dto.cnpj
+        self.endereco = dto.endereco
+        self.telefone = dto.telefone
+
 
     def __repr__(self) -> str:
         return f"Empresa(id={self.id!r}, nome={self.nome!r}, cnpj={self.cnpj!r}, nome={self.nome!r}, endereco={self.endereco!r}, telefone={self.telefone!r})"
