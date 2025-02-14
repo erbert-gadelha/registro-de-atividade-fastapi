@@ -4,7 +4,7 @@ from database import Base
 
 class Empresa(Base):
     __tablename__ = "empresa_tb"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     nome = Column(String, index=True)
     cnpj = Column(String, unique=True)
     endereco = Column(String)
@@ -16,10 +16,10 @@ class Empresa(Base):
 
 class ObrigacaoAcessoria(Base):
     __tablename__ = "obrigacaoAcessoria_tb"
-    id = Column(Integer, primary_key=True, index=True)
-    nome = Column(String, index=True)
-    periodicidade = Column(String, index=True)
-    empresa = Column(Integer, ForeignKey(Empresa.id), nullable=False)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    nome = Column(String)
+    periodicidade = Column(String)
+    empresa = Column(Integer, ForeignKey(Empresa.id), index=True, nullable=False)
 
     def __repr__(self) -> str:
         return f"ObrigacaoAcessoria(id={self.id!r}, nome={self.nome}, periodicidade={self.periodicidade}, empresa={self.empresa})"
