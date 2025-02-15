@@ -9,7 +9,15 @@ class EmpresaDTO(BaseModel):
     class Config:
         from_attributes = True
 
-class ObrigacaoAcessoriaDTO(BaseModel):
+class ObrigacaoAcessoria_RequestDTO(BaseModel):
+    nome: str
+    periodicidade: str
+    cnpj_empresa: str
+
+    class Config:
+        from_attributes = True
+
+class ObrigacaoAcessoria_ResponseDTO(BaseModel):
     nome: str
     periodicidade: str
     empresa: EmpresaDTO
