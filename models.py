@@ -27,7 +27,13 @@ class ObrigacaoAcessoria(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     nome = Column(String)
     periodicidade = Column(String)
-    empresa = Column(Integer, ForeignKey(Empresa.id), index=True, nullable=False)
+    empresa = Column(Integer, ForeignKey(Empresa.id, ondelete="CASCADE"), index=True, nullable=False)
+
+    def __init__(self, nome:str=None, periodicidade:str=None, empresa:int=None):
+        self.nome = nome
+        self.empresa = empresa
+        self.periodicidade = periodicidade
+
 
     def __repr__(self) -> str:
         return f"ObrigacaoAcessoria(id={self.id!r}, nome={self.nome}, periodicidade={self.periodicidade}, empresa={self.empresa})"
