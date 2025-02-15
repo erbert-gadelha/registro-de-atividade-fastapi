@@ -22,5 +22,6 @@ class ObrigacaoAcessoria_ResponseDTO(BaseModel):
     periodicidade: str
     empresa: EmpresaDTO
 
+
     class Config:
         from_attributes = True
